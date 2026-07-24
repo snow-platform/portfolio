@@ -23,13 +23,13 @@
           appReveal
           class="sticky top-[73px] z-10 py-5 bg-base-100/90 backdrop-blur-sm flex flex-wrap gap-3 items-baseline justify-between border-b border-white/[0.08]">
           <div class="flex items-center gap-3.5">
-            <span class="w-2.5 h-2.5 rounded-full" [class]="accentDot(c.accent)"></span>
+            <span class="w-2.5 h-2.5 rounded-full" [class]="accentDoth.color"></span>
             <h2 class="font-display font-semibold text-[26px] tracking-[-0.015em]">
               {{ c.name }}
             </h2>
             <span class="text-sm text-muted">{{ c.role }}</span>
           </div>
-          <span class="font-mono text-[13px]" [class]="accentText(c.accent)">
+          <span class="font-mono text-[13px]" [class]="accentText.color">
             {{ c.start }} — {{ c.end }}
           </span>
         </div>
@@ -63,7 +63,7 @@
                   @for (tech of proj.stack; track tech) {
                     <span
                       class="font-mono text-xs px-[11px] py-[5px] rounded-md border"
-                      [class]="accentChip(c.accent)">
+                      [class]="accentChip.color">
                       {{ tech }}
                     </span>
                   }
