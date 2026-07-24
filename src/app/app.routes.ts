@@ -14,6 +14,7 @@ import { profileIdResolver } from './resolvers/profile-resolver/profile-id-resol
 import { profilesCardResolver } from './resolvers/profile-resolver/profiles-card-resolver'
 import { indexRandomRedirect } from './redirectFn/index-random-redirect'
 import { profilePlusResolver } from './resolvers/profile-resolver/profile-plus-resolver'
+import { profileWorkResolver } from './resolvers/profile-resolver/profile-work-resolver'
 
 const profileProfileResolver = {
   profileId: profileIdResolver,
@@ -55,7 +56,8 @@ export const routes: Routes = [
     component: Career,
     title: 'Work & Projects',
     resolve: {
-      ...profileProfileResolver
+      ...profileProfileResolver,
+      profileWork: profileWorkResolver
     }
   },
   {

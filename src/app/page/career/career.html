@@ -17,7 +17,7 @@
     </section>
 
     <!-- COMPANIES -->
-    @for (c of p.companies; track c.name; let lastCompany = $last) {
+    @for (c of profileWork(); track c.id; let lastCompany = $last) {
       <section class="max-w-shell mx-auto px-8 pt-6" [class.pb-16]="lastCompany">
         <div
           appReveal
@@ -27,23 +27,33 @@
             <h2 class="font-display font-semibold text-[26px] tracking-[-0.015em]">
               {{ c.name }}
             </h2>
-            <span class="text-sm text-muted">{{ c.role }}</span>
+            <span class="text-sm text-muted">{{ c.position }}</span>
           </div>
           <span class="font-mono text-[13px]" [class]="accentText.color">
-            {{ c.start }} — {{ c.end }}
+            @if (c.leaved) {
+              {{ date.month(c.joined) }} {{ date.year(c.joined) }} — {{ date.month(c.leaved) }} {{ date.year(c.leaved) }}
+            } @else {
+              {{ date.month(c.joined) }} {{ date.year(c.joined) }} — Present
+            }
           </span>
         </div>
 
-        @for (proj of c.projects; track proj.title; let lastProj = $last) {
+        @for (proj of projects(c.projects); track proj.id; let lastProj = $last) {
           <article appReveal class="py-11" [class]="!lastProj ? 'border-b border-white/[0.06]' : ''">
             <!-- image gallery -->
             <div class="grid grid-cols-2 gap-3 mb-7">
-              @for (img of proj.images; track img; let first = $first) {
+              @if (proj.imijs?.length ?? 0 > 0) {
+                @for (img of proj.imijs ?? []; track img.id; let first = $first) {
+                  <img
+                    [src]="img.imij"
+                    [alt]="img.imij"
+                    class="rounded-[14px] border border-white/10 grid place-items-center aspect-video object-cover" />
+                }
+              } @else {
                 <div
-                  class="rounded-[14px] border border-white/10 grid place-items-center"
-                  [class]="proj.images.length === 3 && first ? 'row-span-2 aspect-[16/10]' : 'aspect-video'"
+                  class="rounded-[14px] border border-white/10 grid place-items-center aspect-video"
                   style="background: repeating-linear-gradient(45deg, oklch(25.33% 0.016 252.42) 0 12px, oklch(23.26% 0.014 253.1) 12px 24px)">
-                  <span class="font-mono text-[11px] text-faint">{{ img }}</span>
+                  <span class="font-mono text-[11px] text-faint">NO IMAGE</span>
                 </div>
               }
             </div>
@@ -54,17 +64,17 @@
                   {{ proj.title }}
                 </h3>
                 <p class="text-[15.5px] leading-[1.7] text-content/[0.78] mt-3.5 font-light">
-                  {{ proj.summary }}
+                  {{ proj.description }}
                 </p>
               </div>
               <div>
                 <p class="font-mono text-xs text-faint mb-3">TECH STACK</p>
                 <div class="flex flex-wrap gap-[7px]">
-                  @for (tech of proj.stack; track tech) {
+                  @for (tech of proj.tecks ?? []; track tech.id) {
                     <span
                       class="font-mono text-xs px-[11px] py-[5px] rounded-md border"
                       [class]="accentChip.color">
-                      {{ tech }}
+                      {{ tech.tech }}
                     </span>
                   }
                 </div>
