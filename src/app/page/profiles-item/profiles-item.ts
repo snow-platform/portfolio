@@ -7,6 +7,7 @@ import { ProfilePlus } from '../../models/profile-plus'
 import { ProfileId } from '../../models/profile-id'
 import { Accent, Colors } from '../../services/color/accent.service'
 import { CareerProject } from '../../models/career-project'
+import { DateStr }       from '../../services/date/date-str'
 
 type Skill = {
   category: string
@@ -26,6 +27,7 @@ type CareerPurj = {
 })
 export class ProfilesItem {
   readonly accent = new Accent(Colors.text)
+  readonly date = new DateStr()
 
   readonly profileId = input.required<ProfileId>()
   readonly profilePlus = input.required<ProfilePlus>()
@@ -64,24 +66,9 @@ export class ProfilesItem {
       return []
     }
 
-    return value.sort((a, b) => b.significance - a.significance)
+    return value
+      .sort((a, b) => b.significance - a.significance)
       .slice(0, 3)
-      .map(x => ({ id: x.id, name: x.title ?? '' }))
-  }
-
-  moth(value: string | null): string {
-    if (!value) {
-      return ''
-    }
-
-    return new Date(value).toLocaleString('default', { month: 'short' })
-  }
-
-  year(value: string | null): string {
-    if (!value) {
-      return ''
-    }
-
-    return new Date(value).getFullYear().toString()
+      .map((x) => ({ id: x.id, name: x.title ?? '' }))
   }
 }

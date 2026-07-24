@@ -77,9 +77,9 @@
               </div>
               <span class="font-mono text-[12.5px]" [class]="accent.color">
                 @if (c.leaved) {
-                  {{ moth(c.joined) }} {{ year(c.joined) }} — {{ moth(c.leaved) }} {{ year(c.leaved) }}
+                  {{ date.month(c.joined) }} {{ date.year(c.joined) }} — {{ date.month(c.leaved) }} {{ date.year(c.leaved) }}
                 } @else {
-                  {{ moth(c.joined) }} {{ year(c.joined) }} — Present
+                  {{ date.month(c.joined) }} {{ date.year(c.joined) }} — Present
                 }
               </span>
             </div>
@@ -136,7 +136,7 @@
               @for (cert of profilePlus().certificates; track cert.id; let last = $last) {
                 <div class="flex justify-between gap-3 items-baseline">
                   <span class="text-[14.5px]">{{ cert.name }}</span>
-                  <span class="font-mono text-xs text-faint">{{ year(cert.issued_at) }}</span>
+                  <span class="font-mono text-xs text-faint">{{ date.year(cert.issued_at) }}</span>
                 </div>
                 @if (!last) {
                   <div class="h-px bg-white/[0.06]"></div>
@@ -158,7 +158,7 @@
                   <h3 class="font-display font-semibold text-[17px]">{{ e.degree }}</h3>
                   <p class="text-sm text-muted mt-1">{{ e.school }}</p>
                   <p class="font-mono text-xs text-faint mt-2">
-                    {{ year(e.enrolled) }} — {{ year(e.graduated) }} · {{ e.field_of_study }}
+                    {{ date.year(e.enrolled) }} — {{ date.year(e.graduated) }} · {{ e.field_of_study }}
                   </p>
                 </div>
               }
