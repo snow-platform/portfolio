@@ -1,5 +1,6 @@
 services:
   portfolio:
+    container_name: portfolio-ui
     image: ghcr.io/snow-platform/portfolio-ui:${VERSION}
     restart: unless-stopped
     build:
