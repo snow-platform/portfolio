@@ -6,21 +6,6 @@ on:
       - main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 22
-          cache: npm
-      - name: install dependencies
-        run: npm ci
-      - name: build
-        run: npm run build
-      - name: test
-        run: npm test
-
   tag:
     runs-on: ubuntu-latest
     outputs:
@@ -36,7 +21,7 @@ jobs:
           echo "::notice title=Tag:: $tag"
           echo "tag=$tag" >> $GITHUB_OUTPUT
 
-  check:
+  tag_check:
     needs: tag
     runs-on: ubuntu-latest
     steps:
@@ -53,8 +38,13 @@ jobs:
             exit 0
           fi
 
+  check:
+    uses: snow-platform/workflows/.github/workflows/default-check-node.yml@main
+    with:
+      version: 22
+
   release:
-    needs: [build, tag, check]
+    needs: [ tag, tag_check, check ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
