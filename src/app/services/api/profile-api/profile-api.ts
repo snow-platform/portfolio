@@ -8,6 +8,9 @@ import { Paginated } from '../../../models/paginated'
 import { ProfileCard } from '../../../models/profile-card'
 import { ProfilePlus } from '../../../models/profile-plus'
 import { ProfileCareer } from '../../../models/profile-career'
+import { CollectionType } from '../../../models/collection-type'
+import { Article } from '../../../models/article'
+import { SingleType } from '../../../models/single-type'
 
 @Service()
 export class ProfileApi {
@@ -40,6 +43,32 @@ export class ProfileApi {
   getProfileWork(id: string): Observable<ProfileCareer[]> {
     return this._httpClient.get<ProfileCareer[]>(
       `${environment.api.url}/api/${environment.api.version}/profiles/${id}/work`
+    )
+  }
+
+  getProfileArticles(id: string, page = 1, size = 10): Observable<CollectionType<Article>> {
+    return this._httpClient.get<CollectionType<Article>>(
+      `${environment.api.url}/api/${environment.api.version}/profiles/${id}/articles`,
+      { params: { page, size } }
+    )
+  }
+
+  getProfileArticle(id: string, slug: string): Observable<SingleType<Article>> {
+    return this._httpClient.get<SingleType<Article>>(
+      `${environment.api.url}/api/${environment.api.version}/profiles/${id}/articles/${slug}`
+    )
+  }
+
+  getProfileLearnings(id: string, page = 1, size = 10): Observable<CollectionType<Article>> {
+    return this._httpClient.get<CollectionType<Article>>(
+      `${environment.api.url}/api/${environment.api.version}/profiles/${id}/learnings`,
+      { params: { page, size } }
+    )
+  }
+
+  getProfileLearning(id: string, slug: string): Observable<SingleType<Article>> {
+    return this._httpClient.get<SingleType<Article>>(
+      `${environment.api.url}/api/${environment.api.version}/profiles/${id}/learnings/${slug}`
     )
   }
 }
