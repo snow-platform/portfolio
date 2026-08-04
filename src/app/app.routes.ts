@@ -15,6 +15,10 @@ import { profilesCardResolver } from './resolvers/profile-resolver/profiles-card
 import { indexRandomRedirect } from './redirectFn/index-random-redirect'
 import { profilePlusResolver } from './resolvers/profile-resolver/profile-plus-resolver'
 import { profileWorkResolver } from './resolvers/profile-resolver/profile-work-resolver'
+import { profileArticlesResolver }     from './resolvers/profile-resolver/profile-articles-resolver'
+import { profileArticlesItemResolver } from './resolvers/profile-resolver/profile-articles-item-resolver'
+import { profileLearningsResolver }     from './resolvers/profile-resolver/profile-learnings-resolver'
+import { profileLearningsItemResolver } from './resolvers/profile-resolver/profile-learnings-item-resolver'
 
 const profileProfileResolver = {
   profileId: profileIdResolver,
@@ -65,7 +69,8 @@ export const routes: Routes = [
     component: Articles,
     title: 'Articles',
     resolve: {
-      ...profileProfileResolver
+      ...profileProfileResolver,
+      profileArticles: profileArticlesResolver
     }
   },
   {
@@ -73,7 +78,8 @@ export const routes: Routes = [
     component: ArticlesItem,
     title: 'Article',
     resolve: {
-      ...profileProfileResolver
+      ...profileProfileResolver,
+      profileArticlesItem: profileArticlesItemResolver
     }
   },
   {
@@ -81,7 +87,8 @@ export const routes: Routes = [
     component: Learn,
     title: 'Learn',
     resolve: {
-      ...profileProfileResolver
+      ...profileProfileResolver,
+      profileLearnings: profileLearningsResolver
     }
   },
   {
@@ -89,7 +96,8 @@ export const routes: Routes = [
     component: LearnItem,
     title: 'Learn',
     resolve: {
-      ...profileProfileResolver
+      ...profileProfileResolver,
+      profileLearningsItem: profileLearningsItemResolver
     }
   },
   {
