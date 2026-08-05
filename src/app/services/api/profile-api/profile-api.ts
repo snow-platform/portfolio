@@ -10,6 +10,7 @@ import { ProfilePlus } from '../../../models/profile-plus'
 import { ProfileCareer } from '../../../models/profile-career'
 import { CollectionType } from '../../../models/cms/collection-type'
 import { Article } from '../../../models/cms/article'
+import { Review } from '../../../models/cms/review'
 import { SingleType } from '../../../models/cms/single-type'
 
 @Service()
@@ -59,15 +60,15 @@ export class ProfileApi {
     )
   }
 
-  getProfileLearnings(id: string, page = 1, size = 10): Observable<CollectionType<Article>> {
-    return this._httpClient.get<CollectionType<Article>>(
+  getProfileLearnings(id: string, page = 1, size = 10): Observable<CollectionType<Review>> {
+    return this._httpClient.get<CollectionType<Review>>(
       `${environment.api.url}/api/${environment.api.version}/profiles/${id}/learnings`,
       { params: { page, size } }
     )
   }
 
-  getProfileLearning(id: string, slug: string): Observable<SingleType<Article>> {
-    return this._httpClient.get<SingleType<Article>>(
+  getProfileLearning(id: string, slug: string): Observable<SingleType<Review>> {
+    return this._httpClient.get<SingleType<Review>>(
       `${environment.api.url}/api/${environment.api.version}/profiles/${id}/learnings/${slug}`
     )
   }
