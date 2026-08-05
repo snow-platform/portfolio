@@ -1,4 +1,4 @@
-import { Service }     from '@angular/core'
+import { Service } from '@angular/core'
 import { HtmlBuilder } from '../html-builder'
 
 /**
@@ -28,7 +28,9 @@ export class IndexHtmlBuilder implements HtmlBuilder {
 
         // first to second last item is a css class
         // last item is a text
-        html.push(`<span class=\"${matches.slice(0, -1).join(' ')}\">${matches.pop()?.slice(1, -1).replace(/<>/g, ' ')}</span>`)
+        html.push(
+          `<span class="${matches.slice(0, -1).join(' ')}">${matches.pop()?.slice(1, -1).replace(/<>/g, ' ')}</span>`
+        )
       } else {
         html.push(token)
       }
