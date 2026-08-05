@@ -1,0 +1,12 @@
+name: checks.yml
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  check:
+    uses: snow-platform/workflows/.github/workflows/default-check-node.yml@main
+    with:
+      version: '26.x'
