@@ -1,6 +1,6 @@
 import { ResolveFn } from '@angular/router'
-import { CollectionType } from '../../models/collection-type'
-import { Article } from '../../models/article'
+import { CollectionType } from '../../models/cms/collection-type'
+import { Article } from '../../models/cms/article'
 import { inject } from '@angular/core'
 import { ProfileApi } from '../../services/api/profile-api/profile-api'
 

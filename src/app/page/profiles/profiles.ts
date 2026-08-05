@@ -5,7 +5,7 @@ import { Reveal } from '../../shared/reveal'
 import { RouterLink } from '@angular/router'
 import { FooterEmpty } from '../../shared/footer-empty/footer-empty'
 import { ProfileCard } from '../../models/profile-card'
-import { Paginated } from '../../models/paginated'
+import { Paginated } from '../../models/pagination/paginated'
 
 @Component({
   selector: 'app-profiles',

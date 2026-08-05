@@ -4,13 +4,13 @@ import { Observable } from 'rxjs'
 import { environment } from '../../../../environments/environment'
 import { ProfileHero } from '../../../models/profile-hero'
 import { ProfileNavi } from '../../../models/profile-navi'
-import { Paginated } from '../../../models/paginated'
+import { Paginated } from '../../../models/pagination/paginated'
 import { ProfileCard } from '../../../models/profile-card'
 import { ProfilePlus } from '../../../models/profile-plus'
 import { ProfileCareer } from '../../../models/profile-career'
-import { CollectionType } from '../../../models/collection-type'
-import { Article } from '../../../models/article'
-import { SingleType } from '../../../models/single-type'
+import { CollectionType } from '../../../models/cms/collection-type'
+import { Article } from '../../../models/cms/article'
+import { SingleType } from '../../../models/cms/single-type'
 
 @Service()
 export class ProfileApi {

@@ -1,7 +1,7 @@
-import { Author } from './author'
-import { Blocks } from './blocks'
+import { Author }   from './author'
+import { Blocks }   from './blocks'
 import { Category } from './category'
-import { Cover } from './cover'
+import { Cover }    from './cover'
 
 export type Article = {
   id: number

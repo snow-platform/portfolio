@@ -1,8 +1,8 @@
 import { ResolveFn } from '@angular/router'
-import { Article } from '../../models/article'
+import { Article } from '../../models/cms/article'
 import { inject } from '@angular/core'
 import { ProfileApi } from '../../services/api/profile-api/profile-api'
-import { SingleType } from '../../models/single-type'
+import { SingleType } from '../../models/cms/single-type'
 
 export const profileLearningsItemResolver: ResolveFn<SingleType<Article>> = (route, state) => {
   const profileApi = inject(ProfileApi)

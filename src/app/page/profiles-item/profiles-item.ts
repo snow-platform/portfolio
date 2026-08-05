@@ -7,7 +7,7 @@ import { ProfilePlus } from '../../models/profile-plus'
 import { ProfileId } from '../../models/profile-id'
 import { Accent, Colors } from '../../services/color/accent.service'
 import { CareerProject } from '../../models/career-project'
-import { DateStr }       from '../../services/date/date-str'
+import { DateStr } from '../../services/date/date-str'
 
 type Skill = {
   category: string
