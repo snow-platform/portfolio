@@ -12,59 +12,72 @@
             Learnings
           </h1>
           <p class="max-w-[58ch] text-[17px] leading-relaxed text-muted mt-[18px] font-light">
-            A running index of concepts, patterns, and architectures worth internalizing —
-            distilled to the idea, why it matters, and when to reach for it.
+            Here I transcribe the idea, concepts, patterns, and architectures that history's eyes might gaze upon.
           </p>
         </div>
-        <span class="font-mono text-[13px] text-faint whitespace-nowrap">0 entries</span>
+        <span class="font-mono text-[13px] text-faint whitespace-nowrap">
+          {{ pagination.total }} entries
+        </span>
       </div>
     </section>
 
     <!-- FILTERS -->
-    <section class="max-w-shell mx-auto px-8 pt-1 pb-10">
-      <div appReveal class="flex flex-wrap gap-2">
-        @for (x of filters; track x) {
-          <span
-            class="font-mono text-[12.5px] px-3.5 py-1.5 rounded-full border border-white/[0.12] text-muted">
-            {{ x }}
-          </span>
-        }
-      </div>
-    </section>
+    @if (filters.length) {
+      <section class="max-w-shell mx-auto px-8 pt-1 pb-10">
+        <div appReveal class="flex flex-wrap gap-2">
+          @for (x of filters; track x) {
+            <span
+              class="font-mono text-[12.5px] px-3.5 py-1.5 rounded-full border border-white/[0.12] text-muted">
+              {{ x }}
+            </span>
+          }
+        </div>
+      </section>
+    }
 
     <!-- GRID -->
     <section class="max-w-shell mx-auto px-8 pt-1 pb-24">
       <div class="grid gap-5 [grid-template-columns:repeat(auto-fill,minmax(340px,1fr))]">
-        @for (x of items; track x.id) {
+        @for (x of learnings; track x.id) {
           <a
             appReveal
-            [routerLink]="['/profiles', profileId, 'learn', x.id]"
+            [routerLink]="['/profiles', profileId().id, 'learn', x.slug]"
             class="group relative flex flex-col p-[26px] rounded-2xl border border-white/[0.08] bg-base-200 overflow-hidden transition-all duration-200 hover:border-white/20 hover:bg-base-300 hover:-translate-y-[3px]">
             <span class="absolute top-0 left-0 w-full h-[3px] bg-accent"></span>
             <div class="flex items-center justify-between gap-3">
-              <span class="font-mono text-[12px] tracking-[0.03em] text-accent">
-                {{ x.category }}
+              <span class="font-mono text-[12px] tracking-[0.03em]" [class]="accentCategory.color">
+                {{ x.category?.name }}
               </span>
               <span
                 class="font-mono text-[11px] px-2.5 py-[3px] rounded-full border border-white/10 text-faint">
-                {{ x.level }}
+                {{ published(x) }}
               </span>
             </div>
             <h2 class="font-display font-semibold text-[22px] tracking-[-0.015em] leading-[1.18] mt-4">
               {{ x.title }}
             </h2>
             <p class="text-[14.5px] leading-relaxed text-muted font-light mt-3 flex-1">
-              {{ x.summary }}
+              {{ x.description }}
             </p>
             <div class="flex items-center justify-between mt-[22px] pt-4 border-t border-white/[0.07]">
-              <span class="font-mono text-[12px] text-faint">{{ x.meta }}</span>
-              <span class="font-mono text-[13px] text-accent">Study →</span>
+              <div class="flex flex-wrap items-center gap-1.5">
+                @for (t of tags(x); track t.id) {
+                  <span
+                    class="font-mono text-[11px] px-2.5 py-[3px] rounded-full border border-white/[0.12] text-faint">
+                    {{ t.name }}
+                  </span>
+                }
+              </div>
+              <span class="font-mono text-[12px]" [class]="accentStudy.color">Study →</span>
             </div>
           </a>
         }
       </div>
 
-      <app-pagination [total]="0" [size]="0" [page]="0"></app-pagination>
+      <app-pagination
+        [total]="pagination.total"
+        [size]="pagination.pageSize"
+        [page]="pagination.page"></app-pagination>
     </section>
   </main>
 

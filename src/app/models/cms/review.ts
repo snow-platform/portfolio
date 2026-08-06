@@ -2,6 +2,7 @@ import { Author }   from './author'
 import { Blocks }   from './blocks'
 import { Category } from './category'
 import { Cover }    from './cover'
+import { Tag }      from './tag'
 
 export type Review = {
   id: number
@@ -16,5 +17,6 @@ export type Review = {
   cover: Cover | null
   author: Author | null
   category: Category | null
+  tags: Tag[] | null
   blocks: Blocks[] | null
 }

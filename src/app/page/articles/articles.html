@@ -3,45 +3,56 @@
 
   <main class="flex-1">
     <!-- HEADER -->
-    <section class="max-w-list mx-auto px-8 pt-20 pb-10">
-      <div appReveal>
-        <span class="font-mono text-[13px] tracking-[0.04em] text-accent">ARTICLES</span>
-        <h1
-          class="font-display font-semibold text-[clamp(34px,5vw,56px)] tracking-[-0.02em] mt-2.5 leading-[1.03]">
-          Writing
-        </h1>
-        <p class="max-w-[56ch] text-[17px] leading-relaxed text-muted mt-[18px] font-light">
-          Notes on distributed systems, developer experience, and the craft of keeping software
-          boring in the best way.
-        </p>
+    <section class="max-w-shell mx-auto px-8 pt-20 pb-9">
+      <div appReveal class="flex items-end justify-between flex-wrap gap-5">
+        <div>
+          <span class="font-mono text-[13px] tracking-[0.04em] text-accent">ARTICLES</span>
+          <h1
+            class="font-display font-semibold text-[clamp(34px,5vw,56px)] tracking-[-0.02em] mt-2.5 leading-[1.03]">
+            Writing
+          </h1>
+          <p class="max-w-[56ch] text-[17px] leading-relaxed text-muted mt-[18px] font-light">
+            The journey and experience of building software written for us to share.
+          </p>
+        </div>
+        <span class="font-mono text-[13px] text-faint whitespace-nowrap">
+          {{ pagination.total }} entries
+        </span>
       </div>
     </section>
 
     <!-- LIST -->
-    <section class="max-w-list mx-auto px-8 pt-3 pb-20">
+    <section class="max-w-shell mx-auto px-8 pt-3 pb-20">
       <div class="flex flex-col border-b border-white/[0.08]">
-        @for (a of p.articles; track a.id; let last = $last) {
+        @for (a of articles; track a.id; let last = $last) {
           <a
             appReveal
-            [routerLink]="['/profiles', profileId, 'articles', a.id]"
+            [routerLink]="['/profiles', profileId().id, 'articles', a.slug]"
             class="group block py-8 border-t border-white/[0.08] transition-[padding] duration-200 hover:pl-3.5"
             [class.border-b]="last">
             <div class="flex items-center gap-4 mb-3">
-              <span class="font-mono text-[12.5px]" [class]="accentText(a.accent)">{{ a.date }}</span>
-              <span class="w-1 h-1 rounded-full bg-faint"></span>
-              <span class="font-mono text-[12.5px] text-faint">{{ a.readingTime }}</span>
+              <span class="font-mono text-[12.5px]" [class]="accentPub.color">
+                {{ published(a) }}
+              </span>
+              @if (a.category?.name) {
+                <span class="w-1 h-1 rounded-full bg-faint"></span>
+                <span class="font-mono text-[12.5px]" [class]="accentCat.color">{{ a.category?.name }}</span>
+              }
             </div>
             <h2 class="font-display font-semibold text-[26px] tracking-[-0.015em] leading-tight">
               {{ a.title }}
             </h2>
             <p class="text-base leading-relaxed text-muted mt-3 font-light max-w-[64ch]">
-              {{ a.excerpt }}
+              {{ a.description }}
             </p>
           </a>
         }
       </div>
 
-      <app-pagination [total]="0" [size]="0" [page]="0"></app-pagination>
+      <app-pagination
+        [total]="pagination.total"
+        [size]="pagination.pageSize"
+        [page]="pagination.page"></app-pagination>
     </section>
   </main>
 

@@ -1,29 +1,48 @@
-import { afterNextRender, Component, inject } from '@angular/core'
-import { ActivatedRoute, RouterLink } from '@angular/router'
+import { Component, input } from '@angular/core'
+import { RouterLink } from '@angular/router'
 import { Nav } from '../../shared/nav/nav'
 import { Footer } from '../../shared/footer/footer'
 import { Reveal } from '../../shared/reveal'
-import { DEFAULT_PROFILE_ID, getProfile, type Accent } from '../../data/portfolio'
-import { PaginationComponent } from '../../../../design/angular/app/shared/pagination.component'
+import { Pagination } from '../../shared/pagination/pagination'
+import { Accent, Colors } from '../../services/color/accent.service'
+import { DateStr } from '../../services/date/date-str'
+import { Article } from '../../models/cms/article'
+import { CollectionType } from '../../models/cms/collection-type'
+import { MetaPagination } from '../../models/cms/meta-pagination'
+import { ProfileId } from '../../models/profile-id'
 
 @Component({
   selector: 'app-articles',
-  imports: [RouterLink, Nav, Footer, Reveal, PaginationComponent],
+  imports: [RouterLink, Nav, Footer, Reveal, Pagination],
   templateUrl: './articles.html',
   styleUrl: './articles.css'
 })
 export class Articles {
-  private route = inject(ActivatedRoute)
-  readonly profileId = this.route.snapshot.paramMap.get('profileId') ?? DEFAULT_PROFILE_ID
-  readonly p = getProfile(this.profileId)
+  readonly accentPub = new Accent(Colors.text)
+  readonly accentCat = new Accent(Colors.text)
+  readonly date = new DateStr()
 
-  constructor() {
-    afterNextRender(() => {
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
-    })
+  readonly profileId = input.required<ProfileId>()
+  readonly profileArticles = input.required<CollectionType<Article>>()
+
+  get articles(): Article[] {
+    return this.profileArticles().data ?? []
   }
 
-  accentText(a: Accent): string {
-    return { accent: 'text-accent', primary: 'text-primary', secondary: 'text-secondary' }[a]
+  get pagination(): MetaPagination {
+    return (
+      this.profileArticles().meta?.pagination ?? {
+        page: 1,
+        pageSize: 0,
+        pageCount: 0,
+        total: 0
+      }
+    )
+  }
+
+  published(article: Article): string {
+    const value = article.publishedAt ?? article.createdAt
+
+    return `${this.date.month(value)} ${this.date.year(value)}`.trim()
   }
 }

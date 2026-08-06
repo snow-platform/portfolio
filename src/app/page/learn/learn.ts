@@ -1,19 +1,16 @@
-import { Component, inject } from '@angular/core'
-import { Pagination }        from '../../shared/pagination/pagination'
-import { Reveal } from '../../shared/reveal'
+import { Component, input } from '@angular/core'
+import { RouterLink } from '@angular/router'
 import { Nav } from '../../shared/nav/nav'
-import { Footer }                     from '../../shared/footer/footer'
-import { ActivatedRoute, RouterLink } from '@angular/router'
-import { DEFAULT_PROFILE_ID }         from '../../data/portfolio'
-
-type TempItem = {
-  id: number
-  category: string
-  level: string
-  title: string
-  summary: string
-  meta: string
-}
+import { Footer } from '../../shared/footer/footer'
+import { Pagination } from '../../shared/pagination/pagination'
+import { Reveal } from '../../shared/reveal'
+import { Accent, Colors } from '../../services/color/accent.service'
+import { DateStr } from '../../services/date/date-str'
+import { Review } from '../../models/cms/review'
+import { Tag } from '../../models/cms/tag'
+import { CollectionType } from '../../models/cms/collection-type'
+import { MetaPagination } from '../../models/cms/meta-pagination'
+import { ProfileId } from '../../models/profile-id'
 
 @Component({
   selector: 'app-learn',
@@ -22,19 +19,43 @@ type TempItem = {
   styleUrl: './learn.css'
 })
 export class Learn {
-  private route = inject(ActivatedRoute)
+  readonly accentCategory = new Accent(Colors.text)
+  readonly accentStudy = new Accent(Colors.text)
+  readonly date = new DateStr()
 
-  readonly profileId = this.route.snapshot.paramMap.get('profileId')
+  readonly profileId = input.required<ProfileId>()
+  readonly profileLearnings = input.required<CollectionType<Review>>()
 
-  items: TempItem[] = [
-    {
-      id: 0,
-      category: 'Next',
-      level: '2',
-      title: 'NextJS',
-      summary: 'A framework for building server-rendered React applications',
-      meta: 'For your NextJS journey'
-    }
-  ]
-  filters: string[] = ['Tempest', 'Next', 'Tragic']
+  get learnings(): Review[] {
+    return this.profileLearnings().data ?? []
+  }
+
+  get pagination(): MetaPagination {
+    return (
+      this.profileLearnings().meta?.pagination ?? {
+        page: 1,
+        pageSize: 0,
+        pageCount: 0,
+        total: 0
+      }
+    )
+  }
+
+  get filters(): string[] {
+    const names = this.learnings.map((x) => x.category?.name).filter(Boolean) as string[]
+
+    return Array.from(new Set(names))
+  }
+
+  tags(learning: Review): Tag[] {
+    return [...(learning.tags ?? [])]
+      .sort((a, b) => (a.name ?? '').localeCompare(b.name ?? ''))
+      .slice(0, 3)
+  }
+
+  published(learning: Review): string {
+    const value = learning.publishedAt ?? learning.createdAt
+
+    return `${this.date.month(value)} ${this.date.year(value)}`.trim()
+  }
 }
