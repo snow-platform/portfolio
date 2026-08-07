@@ -1,5 +1,6 @@
-export type Blocks = {
-  id: number
-  body: string | null
-  __component: string | null
-}
+import { MediaBlock }    from './blocks/media-block'
+import { QuoteBlock }    from './blocks/quote-block'
+import { RichTextBlock } from './blocks/rich-text-block'
+import { SliderBlock }   from './blocks/slider-block'
+
+export type Blocks = RichTextBlock | QuoteBlock | SliderBlock | MediaBlock

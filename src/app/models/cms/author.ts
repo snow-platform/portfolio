@@ -1,3 +1,5 @@
+import { Cover } from './cover'
+
 export type Author = {
   id: number
   documentId: string | null
@@ -6,4 +8,6 @@ export type Author = {
   createdAt: string | null
   updatedAt: string | null
   publishedAt: string | null
+
+  avatar: Cover | null
 }
