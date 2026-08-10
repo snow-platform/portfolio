@@ -1,7 +1,7 @@
-import { IndexProfile } from './index-profile'
+import { INDEX_PROFILE_TOKEN } from './index-profile'
 
-describe('IndexProfile', () => {
+describe('INDEX_PROFILE_TOKEN', () => {
   it('should create an instance', () => {
-    expect(new IndexProfile()).toBeTruthy()
+    expect(INDEX_PROFILE_TOKEN.toString()).toContain('profile.id')
   })
 })
