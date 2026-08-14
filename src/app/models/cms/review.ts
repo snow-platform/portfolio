@@ -1,14 +1,15 @@
-import { Author }   from './author'
-import { Blocks }   from './blocks'
+import { Author } from './author'
+import { Blocks } from './blocks'
 import { Category } from './category'
-import { Cover }    from './cover'
-import { Tag }      from './tag'
+import { Cover } from './cover'
+import { Tag } from './tag'
 
 export type Review = {
   id: number
   documentId: string | null
   title: string | null
   description: string | null
+  meaning: string | null
   slug: string | null
   createdAt: string | null
   updatedAt: string | null
