@@ -1,0 +1,48 @@
+<div class="flex flex-col gap-8">
+  @for (item of items(); track item.key) {
+    @if (asViewText(item); as rich) {
+      <div
+        appReveal
+        class="prose"
+        [innerHTML]="rich.html"></div>
+    }
+
+    @if (asViewQuote(item); as quote) {
+      <figure
+        appReveal
+        class="border-l-2 border-accent pl-[22px]">
+        <blockquote
+          class="text-[19px] leading-relaxed text-content/90 font-light italic whitespace-pre-line">
+          {{ quote.body }}
+        </blockquote>
+        @if (quote.title) {
+          <figcaption class="font-mono text-[12.5px] text-faint mt-3.5">
+            — {{ quote.title }}
+          </figcaption>
+        }
+      </figure>
+    }
+
+    @if (asViewSlider(item); as gallery) {
+      <div appReveal>
+        <app-slider [files]="gallery.files"></app-slider>
+      </div>
+    }
+
+    @if (asViewMedia(item); as picture) {
+      <figure appReveal>
+        <img
+          [src]="media.url(picture.file)"
+          [alt]="media.alt(picture.file)"
+          [attr.width]="picture.file.width || null"
+          [attr.height]="picture.file.height || null"
+          class="w-full h-auto rounded-[14px] border border-white/10" />
+        @if (media.caption(picture.file)) {
+          <figcaption class="font-mono text-[12px] text-faint text-center mt-3">
+            {{ media.caption(picture.file) }}
+          </figcaption>
+        }
+      </figure>
+    }
+  }
+</div>
