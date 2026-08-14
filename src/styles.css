@@ -113,14 +113,38 @@
   }
 }
 
-/* Long-form article body styling. */
+/* Long-form article body styling — the output of MarkdownHtmlBuilder. Spacing
+ * between blocks is owned by the block list, so a block never opens with a top
+ * margin or closes with a bottom one. */
 @layer components {
+  .prose > :first-child {
+    @apply mt-0;
+  }
+
+  .prose > :last-child {
+    @apply mb-0;
+  }
+
   .prose p {
     @apply text-[17px] leading-[1.75] text-content/85 font-light mb-6;
   }
 
+  .prose h1 {
+    @apply font-display font-semibold text-[28px] tracking-[-0.015em] mt-11 mb-4;
+  }
+
   .prose h2 {
     @apply font-display font-semibold text-2xl tracking-tight mt-11 mb-4;
+  }
+
+  .prose h3 {
+    @apply font-display font-semibold text-xl tracking-tight mt-9 mb-3.5;
+  }
+
+  .prose h4,
+  .prose h5,
+  .prose h6 {
+    @apply font-display font-semibold text-[17px] tracking-tight mt-8 mb-3;
   }
 
   .prose blockquote {
@@ -131,22 +155,61 @@
     @apply font-mono text-[14.5px] bg-base-300 px-[7px] py-0.5 rounded text-accent;
   }
 
-  .prose ul {
+  .prose ul,
+  .prose ol {
     @apply mb-6 list-none pl-1;
+  }
+
+  .prose ol {
+    counter-reset: prose-item;
   }
 
   .prose li {
     @apply text-[17px] leading-[1.7] text-content/85 font-light mb-2.5 flex gap-3;
   }
 
-  .prose li::before {
+  .prose ul > li::before {
     content: '—';
     @apply text-accent;
+  }
+
+  .prose ol > li {
+    counter-increment: prose-item;
+  }
+
+  .prose ol > li::before {
+    content: counter(prose-item) '.';
+    @apply font-mono text-[15px] text-accent;
+  }
+
+  .prose a {
+    @apply text-accent underline decoration-accent/40 underline-offset-[3px] transition-colors hover:decoration-accent;
+  }
+
+  .prose strong {
+    @apply font-medium text-content;
+  }
+
+  .prose em {
+    @apply italic;
+  }
+
+  .prose hr {
+    @apply my-9 border-white/[0.08];
+  }
+
+  .prose img {
+    @apply w-full h-auto my-7 rounded-[14px] border border-white/10;
   }
 
   .prose pre {
     @apply font-mono text-[13.5px] leading-[1.7] border border-white/[0.08] rounded-xl px-[22px] py-5 overflow-x-auto text-content/85 mt-2 mb-7 whitespace-pre;
     background: oklch(18.5% 0.011 254);
+  }
+
+  /* Fenced code arrives as <pre><code>; the inline-code chrome must not apply. */
+  .prose pre code {
+    @apply font-mono text-[13.5px] p-0 rounded-none bg-transparent text-inherit;
   }
 
   .prose pre .tok-k {
