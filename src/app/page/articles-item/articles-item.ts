@@ -1,21 +1,25 @@
-import { afterNextRender, Component, inject } from '@angular/core'
-import { ActivatedRoute, RouterLink }         from '@angular/router'
+import { afterNextRender, Component, input } from '@angular/core'
+import { RouterLink } from '@angular/router'
 import { Nav } from '../../shared/nav/nav'
 import { Footer } from '../../shared/footer/footer'
 import { Reveal } from '../../shared/reveal'
-import { DEFAULT_PROFILE_ID, getArticle, profile, type Accent } from '../../data/portfolio'
+import { BlockList } from '../../shared/block-list/block-list'
+import { view } from '../../services/cms/item-view'
+import { Article } from '../../models/cms/article'
+import { SingleType } from '../../models/cms/single-type'
+import { ProfileId } from '../../models/profile-id'
 
 @Component({
   selector: 'app-articles-item',
-  imports: [RouterLink, Nav, Footer, Reveal],
+  imports: [RouterLink, Nav, Footer, Reveal, BlockList],
   templateUrl: './articles-item.html',
   styleUrl: './articles-item.css'
 })
 export class ArticlesItem {
-  private route = inject(ActivatedRoute)
-  readonly profileId = this.route.snapshot.paramMap.get('profileId') ?? DEFAULT_PROFILE_ID
-  readonly article = getArticle(this.route.snapshot.paramMap.get('articleId') ?? '')
-  readonly author = { initials: profile.initials, name: profile.name, role: profile.role }
+  readonly profileId = input.required<ProfileId>()
+  readonly profileArticlesItem = input.required<SingleType<Article>>()
+
+  readonly view = view
 
   constructor() {
     afterNextRender(() => {
@@ -23,7 +27,7 @@ export class ArticlesItem {
     })
   }
 
-  accentText(a: Accent): string {
-    return { accent: 'text-accent', primary: 'text-primary', secondary: 'text-secondary' }[a]
+  get article(): Article | null {
+    return this.profileArticlesItem().data
   }
 }

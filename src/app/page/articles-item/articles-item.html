@@ -2,68 +2,100 @@
   <app-nav></app-nav>
 
   <main class="flex-1">
-    @if (article; as a) {
+    @if (article; as x) {
+      @let blocks = view.blocks(x);
+      @let tags = view.tags(x);
+      @let cover = view.cover(x);
+      @let author = view.author(x);
+      @let avatar = view.avatar(x);
+      @let readingTime = view.readingTime(x);
+
       <article class="max-w-read mx-auto px-8 pt-14 pb-10">
-        <div appReveal>
+        <div
+          appReveal
+          class="pb-8 border-b border-white/[0.08]">
           <a
-            [routerLink]="['/profiles', profileId, 'articles']"
+            [routerLink]="['/profiles', profileId().id, 'articles']"
             class="font-mono text-[13px] text-muted hover:text-content transition-colors inline-flex items-center gap-2">
             <span>←</span> All articles
           </a>
 
           <div class="flex items-center gap-4 mt-10 flex-wrap">
-            <span class="font-mono text-[12.5px]" [class]="accentText(a.accent)">{{ a.date }}</span>
-            <span class="w-1 h-1 rounded-full bg-faint"></span>
-            <span class="font-mono text-[12.5px] text-faint">{{ a.readingTime }}</span>
-            <span class="w-1 h-1 rounded-full bg-faint"></span>
-            <span class="font-mono text-[12.5px] text-faint">{{ a.category }}</span>
+            @if (x.category?.name) {
+              <span class="font-mono text-[12.5px] tracking-[0.03em] text-accent">
+                {{ x.category?.name }}
+              </span>
+              <span class="w-1 h-1 rounded-full bg-faint"></span>
+            }
+            <span class="font-mono text-[12.5px]">{{ view.published(x) }}</span>
+            @if (readingTime) {
+              <span class="w-1 h-1 rounded-full bg-faint"></span>
+              <span class="font-mono text-[12.5px]">{{ readingTime }}</span>
+            }
           </div>
 
           <h1
             class="font-display font-semibold text-[clamp(32px,5vw,46px)] tracking-[-0.02em] leading-[1.08] mt-[18px] text-balance">
-            {{ a.title }}
+            {{ x.title }}
           </h1>
 
-          <div class="flex items-center gap-3 mt-7 pb-8 border-b border-white/[0.08]">
-            <span
-              class="w-10 h-10 rounded-full bg-primary grid place-items-center font-display font-bold text-sm text-primary-content"
-              >{{ author.initials }}</span>
-            <div>
-              <p class="text-[14.5px] font-medium">{{ author.name }}</p>
-              <p class="font-mono text-xs text-faint">{{ author.role }}</p>
-            </div>
-          </div>
-        </div>
+          @if (x.description) {
+            <p class="text-[19px] leading-relaxed text-content/80 font-light mt-5">
+              {{ x.description }}
+            </p>
+          }
 
-        <!-- BODY -->
-        <div appReveal class="prose mt-9">
-          @for (block of a.body; track $index) {
-            @switch (block.kind) {
-              @case ('p') {
-                <p [innerHTML]="block.html"></p>
+          @if (author) {
+            <div class="flex items-center gap-3 mt-7">
+              @if (avatar) {
+                <img
+                  [src]="avatar"
+                  [alt]="author"
+                  class="w-10 h-10 rounded-full border border-white/10 object-cover" />
+              } @else {
+                <span
+                  class="w-10 h-10 rounded-full bg-primary grid place-items-center font-display font-bold text-sm text-primary-content">
+                  {{ view.initials(x) }}
+                </span>
               }
-              @case ('h2') {
-                <h2>{{ block.text }}</h2>
+              <p class="text-[14.5px] font-medium">{{ author }}</p>
+            </div>
+          }
+
+          @if (tags.length) {
+            <div class="flex flex-wrap gap-2 mt-7">
+              @for (t of tags; track t.id) {
+                <span
+                  class="font-mono text-[11.5px] px-[11px] py-1 rounded-full border border-white/[0.12] text-muted">
+                  {{ t.name }}
+                </span>
               }
-              @case ('quote') {
-                <blockquote>{{ block.text }}</blockquote>
-              }
-              @case ('ul') {
-                <ul>
-                  @for (item of block.items; track item) {
-                    <li>{{ item }}</li>
-                  }
-                </ul>
-              }
-            }
+            </div>
           }
         </div>
+
+        @if (cover) {
+          <img
+            appReveal
+            [src]="cover"
+            [alt]="view.coverAlt(x)"
+            [attr.width]="x.cover?.width || null"
+            [attr.height]="x.cover?.height || null"
+            class="w-full h-auto rounded-2xl border border-white/10 mt-9" />
+        }
+
+        <!-- BODY -->
+        @if (blocks.length) {
+          <div class="mt-9">
+            <app-block-list [blocks]="blocks"></app-block-list>
+          </div>
+        }
 
         <div
           appReveal
           class="mt-12 pt-8 border-t border-white/[0.08] flex flex-wrap gap-4 items-center justify-between">
           <a
-            [routerLink]="['/profiles', profileId, 'articles']"
+            [routerLink]="['/profiles', profileId().id, 'articles']"
             class="font-mono text-[13px] text-primary hover:brightness-125 transition">
             ← Back to all articles
           </a>
@@ -86,7 +118,7 @@
         <h1 class="font-display font-semibold text-3xl tracking-tight">Article not found</h1>
         <p class="text-muted mt-4 font-light">We couldn’t find that article.</p>
         <a
-          [routerLink]="['/profiles', profileId, 'articles']"
+          [routerLink]="['/profiles', profileId().id, 'articles']"
           class="inline-block mt-8 font-mono text-[13px] px-4 py-2.5 rounded-lg bg-primary text-primary-content">
           ← Back to all articles
         </a>

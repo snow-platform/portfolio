@@ -2,22 +2,36 @@
   <app-nav></app-nav>
 
   <main class="flex-1">
-    @if (item; as x) {
-      <article class="max-w-read mx-auto px-8 pt-14 pb-10">
-        <div appReveal>
-          <a
-            routerLink="/learnings"
-            class="font-mono text-[13px] text-muted hover:text-content transition-colors inline-flex items-center gap-2"><span>←</span>
-            All learnings</a>
+    @if (learning; as x) {
+      @let blocks = view.blocks(x);
+      @let tags = view.tags(x);
+      @let cover = view.cover(x);
+      @let author = view.author(x);
+      @let avatar = view.avatar(x);
+      @let readingTime = view.readingTime(x);
 
-          <div class="flex items-center gap-3.5 mt-10 flex-wrap">
-            <span class="font-mono text-[12.5px] tracking-[0.03em] text-accent">
-              {{ x.category }}
-            </span>
-            <span class="w-1 h-1 rounded-full bg-faint"></span>
-            <span class="font-mono text-[12.5px] text-faint">{{ x.level }} concept</span>
-            <span class="w-1 h-1 rounded-full bg-faint"></span>
-            <span class="font-mono text-[12.5px] text-faint">{{ x.learnedOn }}</span>
+      <article class="max-w-read mx-auto px-8 pt-14 pb-10">
+        <div
+          appReveal
+          class="pb-8 border-b border-white/[0.08]">
+          <a
+            [routerLink]="['/profiles', profileId().id, 'learn']"
+            class="font-mono text-[13px] text-muted hover:text-content transition-colors inline-flex items-center gap-2">
+            <span>←</span> All learnings
+          </a>
+
+          <div class="flex items-center gap-4 mt-10 flex-wrap">
+            @if (x.category?.name) {
+              <span class="font-mono text-[12.5px] tracking-[0.03em] text-accent">
+                {{ x.category?.name }}
+              </span>
+              <span class="w-1 h-1 rounded-full bg-faint"></span>
+            }
+            <span class="font-mono text-[12.5px]">{{ view.published(x) }}</span>
+            @if (readingTime) {
+              <span class="w-1 h-1 rounded-full bg-faint"></span>
+              <span class="font-mono text-[12.5px]">{{ readingTime }}</span>
+            }
           </div>
 
           <h1
@@ -25,80 +39,87 @@
             {{ x.title }}
           </h1>
 
-          <p class="text-[19px] leading-relaxed text-content/80 font-light mt-5"
-             [innerHTML]="x.lede"></p>
+          @if (x.description) {
+            <p class="text-[19px] leading-relaxed text-content/80 font-light mt-5">
+              {{ x.description }}
+            </p>
+          }
 
-          <div class="flex flex-wrap gap-2 mt-[26px] pb-8 border-b border-white/[0.08]">
-            @for (t of x.tags; track t) {
-              <span
-                class="font-mono text-[11.5px] px-[11px] py-1 rounded-full border border-white/[0.12] text-muted"
-              >{{ t }}</span
-              >
-            }
-          </div>
-        </div>
+          @if (author) {
+            <div class="flex items-center gap-3 mt-7">
+              @if (avatar) {
+                <img
+                  [src]="avatar"
+                  [alt]="author"
+                  class="w-10 h-10 rounded-full border border-white/10 object-cover" />
+              } @else {
+                <span
+                  class="w-10 h-10 rounded-full bg-primary grid place-items-center font-display font-bold text-sm text-primary-content">
+                  {{ view.initials(x) }}
+                </span>
+              }
+              <p class="text-[14.5px] font-medium">{{ author }}</p>
+            </div>
+          }
 
-        <!-- IN ONE SENTENCE -->
-        <div appReveal class="mt-2 p-6 rounded-2xl bg-base-200 border border-white/[0.08]">
-          <span class="font-mono text-[12px] tracking-[0.04em] text-primary">IN ONE SENTENCE</span>
-          <p class="text-[16.5px] leading-relaxed text-content/85 font-light mt-2.5">
-            {{ x.oneSentence }}
-          </p>
-        </div>
-
-        <!-- BODY -->
-        <div appReveal class="prose mt-10">
-          @for (block of x.body; track $index) {
-            @switch (block.kind) {
-              @case ('p') {
-                <p [innerHTML]="block.html"></p>
+          @if (tags.length) {
+            <div class="flex flex-wrap gap-2 mt-7">
+              @for (t of tags; track t.id) {
+                <span
+                  class="font-mono text-[11.5px] px-[11px] py-1 rounded-full border border-white/[0.12] text-muted">
+                  {{ t.name }}
+                </span>
               }
-              @case ('h2') {
-                <h2>{{ block.text }}</h2>
-              }
-              @case ('quote') {
-                <blockquote>{{ block.text }}</blockquote>
-              }
-              @case ('ul') {
-                <ul>
-                  @for (item of block.items; track item) {
-                    <li>{{ item }}</li>
-                  }
-                </ul>
-              }
-              @case ('code') {
-                <pre [innerHTML]="block.html"></pre>
-              }
-            }
+            </div>
           }
         </div>
 
-        <!-- RELATED -->
-        <div appReveal class="mt-11 p-6 rounded-2xl bg-base-200 border border-white/[0.08]">
-          <span class="font-mono text-[12px] tracking-[0.04em] text-accent">RELATED</span>
-          <div class="flex flex-col gap-0.5 mt-3">
-            @for (r of x.related; track r.id) {
-              <a [routerLink]="['/learnings', r.id]"
-                 class="group flex items-center justify-between py-3 border-t border-white/[0.06] transition-[padding] hover:pl-2">
-                <span class="text-[15px] text-content/85">{{ r.title }}</span>
-                <span class="font-mono text-[12px] text-faint">{{ r.category }} →</span>
-              </a>
-            }
+        <!-- IN ONE SENTENCE -->
+        @if (x.meaning) {
+          <div
+            appReveal
+            class="mt-9 p-6 rounded-2xl bg-base-200 border border-white/[0.08]">
+            <span class="font-mono text-[12px] tracking-[0.04em] text-primary">IN ONE SENTENCE</span>
+            <p class="text-[16.5px] leading-relaxed text-content/85 font-light mt-2.5">
+              {{ x.meaning }}
+            </p>
           </div>
-        </div>
+        }
 
-        <div appReveal
-             class="mt-10 pt-8 border-t border-white/[0.08] flex flex-wrap gap-4 items-center justify-between"><a
-          routerLink="/learnings"
-          class="font-mono text-[13px] text-primary hover:brightness-125 transition">
-          ← Back to all learnings
-        </a>
+        @if (cover) {
+          <img
+            appReveal
+            [src]="cover"
+            [alt]="view.coverAlt(x)"
+            [attr.width]="x.cover?.width || null"
+            [attr.height]="x.cover?.height || null"
+            class="w-full h-auto rounded-2xl border border-white/10 mt-9" />
+        }
+
+        <!-- BODY -->
+        @if (blocks.length) {
+          <div class="mt-9">
+            <app-block-list [blocks]="blocks"></app-block-list>
+          </div>
+        }
+
+        <div
+          appReveal
+          class="mt-11 pt-8 border-t border-white/[0.08] flex flex-wrap gap-4 items-center justify-between">
+          <a
+            [routerLink]="['/profiles', profileId().id, 'learn']"
+            class="font-mono text-[13px] text-primary hover:brightness-125 transition">
+            ← Back to all learnings
+          </a>
           <div class="flex gap-3">
-            <a href="#"
-               class="font-mono text-[13px] px-4 py-2.5 rounded-lg border border-white/[0.14] hover:bg-white/[0.05] hover:border-white/[0.28] transition-colors">
-              Bookmark</a>
-            <a href="#"
-               class="font-mono text-[13px] px-4 py-2.5 rounded-lg border border-white/[0.14] hover:bg-white/[0.05] hover:border-white/[0.28] transition-colors">
+            <!--            <a-->
+            <!--              href="#"-->
+            <!--              class="font-mono text-[13px] px-4 py-2.5 rounded-lg border border-white/[0.14] hover:bg-white/[0.05] hover:border-white/[0.28] transition-colors">-->
+            <!--              Bookmark-->
+            <!--            </a>-->
+            <a
+              href="#"
+              class="font-mono text-[13px] px-4 py-2.5 rounded-lg border border-white/[0.14] hover:bg-white/[0.05] hover:border-white/[0.28] transition-colors">
               Share
             </a>
           </div>
@@ -108,9 +129,11 @@
       <section class="max-w-read mx-auto px-8 pt-24 pb-24 text-center">
         <h1 class="font-display font-semibold text-3xl tracking-tight">Learning not found</h1>
         <p class="text-muted mt-4 font-light">We couldn’t find that entry.</p>
-        <a routerLink="/learnings"
-           class="inline-block mt-8 font-mono text-[13px] px-4 py-2.5 rounded-lg bg-primary text-primary-content">
-          ← Back to all learnings</a>
+        <a
+          [routerLink]="['/profiles', profileId().id, 'learn']"
+          class="inline-block mt-8 font-mono text-[13px] px-4 py-2.5 rounded-lg bg-primary text-primary-content">
+          ← Back to all learnings
+        </a>
       </section>
     }
   </main>
