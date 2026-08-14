@@ -1,10 +1,14 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, computed, inject } from '@angular/core'
+import { Router, RouterOutlet } from '@angular/router'
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet],
   templateUrl: './app.html',
-  styleUrl: './app.css',
+  styleUrl: './app.css'
 })
-export class App {}
+export class App {
+  private readonly router = inject(Router)
+
+  navigating = computed(() => !!this.router.currentNavigation())
+}

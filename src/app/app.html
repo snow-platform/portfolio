@@ -1,1 +1,11 @@
-<router-outlet />
+@if (navigating()) {
+  <div
+    class="loading"
+    role="status"
+    aria-live="polite">
+    <span class="loading-spinner"></span>
+    <span class="sr-only">Loading…</span>
+  </div>
+} @else {
+  <router-outlet />
+}
