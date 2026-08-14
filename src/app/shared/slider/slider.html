@@ -1,0 +1,53 @@
+@if (show()) {
+  @let file = files()[current()];
+
+  <figure>
+    <div class="relative rounded-[14px] border border-white/10 bg-base-200 overflow-hidden">
+      <img
+        [src]="media.url(file)"
+        [alt]="media.alt(file)"
+        class="w-full aspect-video object-cover" />
+
+      @if (files().length > 1) {
+        <button
+          type="button"
+          aria-label="Previous image"
+          (click)="previous()"
+          class="text-[15px] font-bold absolute left-3 top-1/2 -translate-y-1/2 w-9.5 h-9.5 rounded-[10px] border border-white/[0.14] bg-base-100/70 backdrop-blur-sm font-mono hover:bg-base-100/90 hover:border-white/[0.28] transition-colors">
+          &lsaquo;
+        </button>
+        <button
+          type="button"
+          aria-label="Next image"
+          (click)="next()"
+          class="text-[15px] font-bold absolute right-3 top-1/2 -translate-y-1/2 w-9.5 h-9.5 rounded-[10px] border border-white/[0.14] bg-base-100/70 backdrop-blur-sm font-mono hover:bg-base-100/90 hover:border-white/[0.28] transition-colors">
+          &rsaquo;
+        </button>
+        <span
+          class="absolute right-3 bottom-3 font-mono text-[11px] px-2.5 py-[3px] rounded-full border border-white/10 bg-base-100/70 backdrop-blur-sm text-faint">
+          {{ current() + 1 }} / {{ files().length }}
+        </span>
+      }
+    </div>
+
+    @if (files().length > 1) {
+      <div class="flex justify-center gap-2 mt-3.5">
+        @for (slide of files(); track slide.id; let index = $index) {
+          <button
+            type="button"
+            [attr.aria-label]="'Image ' + (index + 1)"
+            [attr.aria-current]="index === current() ? 'true' : null"
+            (click)="go(index)"
+            class="h-1.5 rounded-full transition-all"
+            [class]="index === current() ? 'w-6 bg-accent' : 'w-1.5 bg-white/20 hover:bg-white/40'"></button>
+        }
+      </div>
+    }
+
+    @if (media.caption(file)) {
+      <figcaption class="font-mono text-[12px] text-faint text-center mt-3">
+        {{ media.caption(file) }}
+      </figcaption>
+    }
+  </figure>
+}
