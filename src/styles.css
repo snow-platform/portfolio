@@ -160,26 +160,47 @@
     @apply mb-6 list-none pl-1;
   }
 
+  /* A nested list is a child of the item it belongs to, so the item's own
+   * padding already indents it; it only needs its block margins tightened. */
+  .prose li > ul,
+  .prose li > ol {
+    @apply mt-2.5 mb-0;
+  }
+
   .prose ol {
     counter-reset: prose-item;
   }
 
+  /* The item stays a normal block box and the marker is taken out of flow —
+   * anything marked puts inside an <li> (a nested list, the <p> of a loose
+   * list, inline <strong>/<code>) then flows as usual instead of becoming a
+   * sibling of the marker. */
   .prose li {
-    @apply text-[17px] leading-[1.7] text-content/85 font-light mb-2.5 flex gap-3;
+    @apply relative text-[17px] leading-[1.7] text-content/85 font-light mb-2.5 pl-7;
+  }
+
+  .prose li > p {
+    @apply mb-0;
+  }
+
+  .prose li > p + p {
+    @apply mt-2.5;
   }
 
   .prose ul > li::before {
     content: '—';
-    @apply text-accent;
+    @apply absolute left-0 text-accent;
   }
 
+  /* Wider gutter than the em dash needs: the counter is what has to fit. */
   .prose ol > li {
     counter-increment: prose-item;
+    @apply pl-8;
   }
 
   .prose ol > li::before {
     content: counter(prose-item) '.';
-    @apply font-mono text-[15px] text-accent;
+    @apply absolute left-0 font-mono text-[15px] text-accent;
   }
 
   .prose a {
