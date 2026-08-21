@@ -4,7 +4,6 @@
   <main class="flex-1">
     @if (learning; as x) {
       @let blocks = view.blocks(x);
-      @let tags = view.tags(x);
       @let cover = view.cover(x);
       @let author = view.author(x);
       @let avatar = view.avatar(x);
@@ -59,17 +58,6 @@
                 </span>
               }
               <p class="text-[14.5px] font-medium">{{ author }}</p>
-            </div>
-          }
-
-          @if (tags.length) {
-            <div class="flex flex-wrap gap-2 mt-7">
-              @for (t of tags; track t.id) {
-                <span
-                  class="font-mono text-[11.5px] px-[11px] py-1 rounded-full border border-white/[0.12] text-muted">
-                  {{ t.name }}
-                </span>
-              }
             </div>
           }
         </div>

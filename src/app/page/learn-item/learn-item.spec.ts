@@ -44,7 +44,6 @@ const review = {
   publishedAt: '2026-08-06T13:20:17.362Z',
   cover: upload(15, '880444220', 'The review cover'),
   category: { id: 8, name: 'General', slug: 'general' },
-  tags: [{ id: 2, name: 'Example', slug: 'example' }],
   author: { id: 3, name: 'Carlo Caballero', avatar: upload(13, '133301699_p0') },
   blocks: [
     { id: 28, body: '# Example\n\nLorem ipsum.', __component: 'shared.rich-text' },
@@ -79,7 +78,6 @@ const bare = {
   publishedAt: null,
   cover: null,
   category: null,
-  tags: null,
   author: { id: 3, name: 'Carlo Caballero', avatar: null },
   blocks: []
 } as unknown as Review
@@ -110,12 +108,6 @@ describe('LearnItem', () => {
       return 'media'
     })
   }
-
-  /** The tag chips of the header — the only `flex-wrap gap-2` row on the page. */
-  const tags = () =>
-    Array.from(harness.routeNativeElement?.querySelectorAll('.flex-wrap.gap-2 span') ?? []).map(
-      (el) => el.textContent?.trim()
-    )
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
@@ -149,7 +141,6 @@ describe('LearnItem', () => {
     expect(page?.textContent).toContain('Aug 2026')
     expect(page?.textContent).toContain('1 min read')
     expect(page?.textContent).toContain('An example review for testing')
-    expect(tags()).toEqual(['Example'])
   })
 
   test('render the meaning panel above the body', () => {
@@ -212,7 +203,6 @@ describe('LearnItem', () => {
     expect(page?.querySelector('article span.bg-primary')?.textContent?.trim()).toEqual('CC')
     expect(page?.textContent).toContain('Jan 2026')
     expect(page?.textContent).not.toContain('IN ONE SENTENCE')
-    expect(tags()).toEqual([])
     expect(page?.querySelector('article > img')).toBeNull()
     expect(page?.querySelector('app-block-list')).toBeNull()
   })

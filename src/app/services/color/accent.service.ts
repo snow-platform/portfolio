@@ -11,8 +11,38 @@ export class Accent {
   }
 }
 
+export class AccentNext {
+  private readonly _length: number
+  private readonly _colors: string[][]
+
+  private _index = 0
+
+  constructor(...colors: string[][]) {
+    if (colors.length === 0) {
+      this._length = 0
+      this._colors = []
+      return
+    }
+
+    const sorted = colors.map((value) => value.length).sort((a, b) => a - b)
+
+    this._length = sorted[0]
+    this._colors = colors
+  }
+
+  get color(): string[] {
+    return this._colors.map((value) => value[this._index])
+  }
+
+  next(): AccentNext {
+    this._index = Math.floor(Math.random() * this._length)
+    return this
+  }
+}
+
 export const Colors = {
   text: ['text-accent', 'text-primary', 'text-secondary'],
+  bg: ['bg-accent', 'bg-primary', 'bg-secondary'],
   bgDoth: [
     'bg-accent shadow-[0_0_12px_oklch(77%_0.152_181.912_/_0.7)]',
     'bg-primary shadow-[0_0_12px_oklch(58%_0.233_277.117_/_0.7)]',

@@ -43,7 +43,6 @@ const article = {
   publishedAt: '2026-08-05T15:59:15.117Z',
   cover: upload(14, '125226669_p3', 'A wide cover image'),
   category: { id: 8, name: 'General', slug: 'general' },
-  tags: [{ id: 2, name: 'Example', slug: 'example' }],
   author: { id: 3, name: 'Carlo Caballero', avatar: upload(13, '133301699_p0') },
   blocks: [
     {
@@ -82,7 +81,6 @@ const bare = {
   publishedAt: null,
   cover: null,
   category: null,
-  tags: null,
   author: { id: 3, name: 'Carlo Caballero', avatar: null },
   blocks: []
 } as unknown as Article
@@ -113,12 +111,6 @@ describe('ArticlesItem', () => {
       return 'media'
     })
   }
-
-  /** The tag chips of the header — the only `flex-wrap gap-2` row on the page. */
-  const tags = () =>
-    Array.from(harness.routeNativeElement?.querySelectorAll('.flex-wrap.gap-2 span') ?? []).map(
-      (el) => el.textContent?.trim()
-    )
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
@@ -158,7 +150,7 @@ describe('ArticlesItem', () => {
     expect(page?.textContent).toContain('This is an example article used for testing the articles.')
   })
 
-  test('render the cover, the avatar and the tags of the article', () => {
+  test('render the cover and the avatar of the article', () => {
     // act
     const page = harness.routeNativeElement
     const cover = page?.querySelector('article > img')
@@ -171,7 +163,6 @@ describe('ArticlesItem', () => {
     expect(avatar?.getAttribute('src')).toEqual(
       'https://cms.example.test/thumbnail_133301699_p0.png'
     )
-    expect(tags()).toEqual(['Example'])
   })
 
   test('render the blocks in the order the cms returned them', () => {
@@ -223,7 +214,6 @@ describe('ArticlesItem', () => {
     expect(page?.querySelector('h1')?.textContent?.trim()).toEqual('Bare Article')
     expect(page?.querySelector('article span.bg-primary')?.textContent?.trim()).toEqual('CC')
     expect(page?.textContent).toContain('Jan 2026')
-    expect(tags()).toEqual([])
     expect(page?.textContent).not.toContain('min read')
     expect(page?.querySelector('article > img')).toBeNull()
     expect(page?.querySelector('app-block-list')).toBeNull()

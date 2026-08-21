@@ -3,11 +3,10 @@ import { RouterLink } from '@angular/router'
 import { Nav } from '../../shared/nav/nav'
 import { Footer } from '../../shared/footer/footer'
 import { Pagination } from '../../shared/pagination/pagination'
-import { Reveal } from '../../shared/reveal'
-import { Accent, Colors } from '../../services/color/accent.service'
-import { DateStr } from '../../services/date/date-str'
+import { Reveal }                     from '../../shared/reveal'
+import { Accent, AccentNext, Colors } from '../../services/color/accent.service'
+import { DateStr }                    from '../../services/date/date-str'
 import { Review } from '../../models/cms/review'
-import { Tag } from '../../models/cms/tag'
 import { CollectionType } from '../../models/cms/collection-type'
 import { MetaPagination } from '../../models/cms/meta-pagination'
 import { ProfileId } from '../../models/profile-id'
@@ -19,8 +18,7 @@ import { ProfileId } from '../../models/profile-id'
   styleUrl: './learn.css'
 })
 export class Learn {
-  readonly accentCategory = new Accent(Colors.text)
-  readonly accentStudy = new Accent(Colors.text)
+  readonly accent = new AccentNext(Colors.text, Colors.bg)
   readonly date = new DateStr()
 
   readonly profileId = input.required<ProfileId>()
@@ -45,12 +43,6 @@ export class Learn {
     const names = this.learnings.map((x) => x.category?.name).filter(Boolean) as string[]
 
     return Array.from(new Set(names))
-  }
-
-  tags(learning: Review): Tag[] {
-    return [...(learning.tags ?? [])]
-      .sort((a, b) => (a.name ?? '').localeCompare(b.name ?? ''))
-      .slice(0, 3)
   }
 
   published(learning: Review): string {

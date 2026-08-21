@@ -18,9 +18,9 @@ const navi = {
 } as ProfileNavi
 
 /**
- * A trimmed learnings collection. The first card carries four tags out of order —
- * the page sorts them by name and keeps three — and the two cards repeat a category
- * so the filter row has to de-duplicate.
+ * A trimmed learnings collection. The first card carries the `meaning` the card
+ * footer renders and the second leaves it null, and the two cards repeat a
+ * category so the filter row has to de-duplicate.
  */
 const profileLearnings = {
   data: [
@@ -32,12 +32,7 @@ const profileLearnings = {
       createdAt: '2026-08-04T08:33:54.978Z',
       publishedAt: '2026-08-05T15:59:15.117Z',
       category: { id: 8, name: 'Patterns', slug: 'patterns' },
-      tags: [
-        { id: 1, name: 'Zod', slug: 'zod' },
-        { id: 2, name: 'Angular', slug: 'angular' },
-        { id: 3, name: 'Signals', slug: 'signals' },
-        { id: 4, name: 'Rxjs', slug: 'rxjs' }
-      ]
+      meaning: 'Doubt everything except the love.'
     },
     {
       id: 22,
@@ -47,7 +42,7 @@ const profileLearnings = {
       createdAt: '2026-01-09T08:33:54.978Z',
       publishedAt: null,
       category: { id: 8, name: 'Patterns', slug: 'patterns' },
-      tags: null
+      meaning: null
     }
   ],
   meta: { pagination: { page: 1, pageSize: 6, pageCount: 1, total: 2 } }
@@ -97,15 +92,23 @@ describe('Learn', () => {
     expect(page?.textContent).toContain('2 entries')
   })
 
-  test('de-duplicate the filters and keep the first three tags by name', () => {
+  test('de-duplicate the filters and fall back to the created date', () => {
     // assert
     expect(component.filters).toEqual(['Patterns'])
-    expect(component.tags(component.learnings[0]).map((t) => t.name)).toEqual([
-      'Angular',
-      'Rxjs',
-      'Signals'
-    ])
-    expect(component.tags(component.learnings[1])).toEqual([])
     expect(component.published(component.learnings[1])).toEqual('Jan 2026')
+  })
+
+  test('close each card with the meaning, truncated and repeated as a tooltip', () => {
+    // act
+    const page = harness.routeNativeElement
+    const meanings = Array.from(page?.querySelectorAll('main a p.truncate') ?? [])
+
+    // assert
+    expect(meanings.map((el) => el.textContent?.trim())).toEqual([
+      'Doubt everything except the love.',
+      ''
+    ])
+    expect(meanings[0].getAttribute('title')).toEqual('Doubt everything except the love.')
+    expect(meanings[1].getAttribute('title')).toBeNull()
   })
 })

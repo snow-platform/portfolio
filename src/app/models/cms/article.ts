@@ -1,8 +1,7 @@
-import { Author }   from './author'
-import { Blocks }   from './blocks'
+import { Author } from './author'
+import { Blocks } from './blocks'
 import { Category } from './category'
-import { Cover }    from './cover'
-import { Tag }      from './tag'
+import { Cover } from './cover'
 
 export type Article = {
   id: number
@@ -17,6 +16,5 @@ export type Article = {
   cover: Cover | null
   author: Author | null
   category: Category | null
-  tags: Tag[] | null
   blocks: Blocks[] | null
 }

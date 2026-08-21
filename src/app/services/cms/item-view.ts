@@ -2,7 +2,6 @@ import { Article } from '../../models/cms/article'
 import { Blocks } from '../../models/cms/blocks'
 import { Review } from '../../models/cms/review'
 import { RichTextBlock } from '../../models/cms/blocks/rich-text-block'
-import { Tag } from '../../models/cms/tag'
 import { DateStr } from '../date/date-str'
 import { media } from '../media/media-src'
 
@@ -13,10 +12,6 @@ const date = new DateStr()
 
 function blocks(entry: Item | null): Blocks[] {
   return entry?.blocks ?? []
-}
-
-function tags(entry: Item | null): Tag[] {
-  return entry?.tags ?? []
 }
 
 function published(entry: Item | null): string {
@@ -62,7 +57,6 @@ function initials(entry: Item | null): string {
 
 export const view = {
   blocks,
-  tags,
   published,
   readingTime,
   cover,
